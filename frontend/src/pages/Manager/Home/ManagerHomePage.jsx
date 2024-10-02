@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import LatestCourses from './LatestCourses'
 import LatestStudents from './LatestStudents'
 
-export default function ManagerHome() {
+export default function ManagerHomePage() {
   return (
     <>
       <header className="flex items-center justify-between gap-[30px]">
