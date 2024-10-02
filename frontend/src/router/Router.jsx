@@ -9,7 +9,8 @@ import ManagerCreateCoursePage from "../pages/Manager/CreateCourse/ManagerCreate
 import ManagerCourseDetailPage from "../pages/Manager/CourseDetail/ManagerCourseDetailPage";
 import ManagerCreateContentPage from "../pages/Manager/CreateCourseContent/CourseContentCreate";
 import ManagerCoursePreviewPage from "../pages/Manager/CoursePreview/ManagerCoursePreviewPage";
-import ManagerStudentsPage from "../pages/Manager/Students/ManagerStudentsPage";
+import ManagerStudentsPage from "../pages/Manager/Students/StudentOverview/ManagerStudentsPage";
+import StudentPage from "../pages/Students/StudentPage";
 
 
 const Router = createBrowserRouter([
@@ -60,6 +61,20 @@ const Router = createBrowserRouter([
       {
         path: "/manager/students",
         element: <ManagerStudentsPage />
+      }
+    ]
+  },
+  {
+    path: "/student",
+    element: <LayoutDashboard isAdmin={false} />,
+    children: [
+      {
+        index: true,
+        element: <StudentPage />
+      },
+      {
+        path: "/student/detail-course/:id",
+        element: <ManagerCoursePreviewPage />
       }
     ]
   }
