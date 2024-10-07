@@ -5,6 +5,7 @@ import connectDB from './utils/database.js';
 import globalRoute from './routes/globalRoute.js';
 import authRoute from './routes/authRoute.js';
 import paymentRoute from './routes/paymentRoute.js';
+import courseRoute from './routes/courseRoute.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.static('public'));
 app.use("/api", globalRoute);
 app.use("/api", authRoute);
 app.use("/api", paymentRoute);
+app.use("/api", courseRoute);
 
 app.get('/', (req, res) => {
     res.json({"text": "Hello Galih"});
