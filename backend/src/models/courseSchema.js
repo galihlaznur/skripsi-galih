@@ -11,7 +11,6 @@ const courseSchema = mongoose.Schema({
     thumbnail: {
         type: String, 
         required: true,
-        // default: 'thumbnail-demo.jpg'
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
