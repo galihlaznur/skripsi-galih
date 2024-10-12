@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import ManagerHomePage from "../pages/Manager/Home/ManagerHomePage";
 import SignInPage from "../pages/SignIn/SignInPage";
 import SignUpPage from "../pages/SignUp/SignUpPage";
@@ -11,6 +11,9 @@ import ManagerCreateContentPage from "../pages/Manager/CreateCourseContent/Cours
 import ManagerCoursePreviewPage from "../pages/Manager/CoursePreview/ManagerCoursePreviewPage";
 import ManagerStudentsPage from "../pages/Manager/Students/StudentOverview/ManagerStudentsPage";
 import StudentPage from "../pages/Students/StudentPage";
+import secureLocalStorage from "react-secure-storage";
+import { MANAGER_SESSION, STORAGE_KEY } from "../utils/const";
+import { getCategories, getCourseDetail, getCourses } from "../services/courseService";
 
 
 const Router = createBrowserRouter([
@@ -32,6 +35,16 @@ const Router = createBrowserRouter([
   },
   {
     path: "/manager",
+    id: MANAGER_SESSION,
+    loader: async () => {
+      const session = secureLocalStorage.getItem(STORAGE_KEY)
+      
+      if (!session || session.role !== "manager") {
+        throw redirect('/manager/sign-in')
+      }
+
+      return session
+    },
     element: <LayoutDashboard />,
     children: [
       {
@@ -40,10 +53,29 @@ const Router = createBrowserRouter([
       },
       {
         path: "/manager/courses",
+        loader: async () => {
+          const data = await getCourses()
+          console.log(data)
+          return data
+        },
         element: <ManagerCoursePage />
       },
       {
         path: "/manager/courses/create",
+        loader: async () => {
+          const categories = await getCategories()
+          return {categories, course: null}
+        },
+        element: <ManagerCreateCoursePage />
+      },
+      {
+        path: "/manager/courses/edit/:id",
+        loader: async ({params}) => {
+          const categories = await getCategories()
+          const course = await getCourseDetail(params.id)
+          console.log(course)
+          return {categories, course: course?.data}
+        },
         element: <ManagerCreateCoursePage />
       },
       {

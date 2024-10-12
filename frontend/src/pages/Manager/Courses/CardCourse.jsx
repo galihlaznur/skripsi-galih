@@ -1,14 +1,30 @@
-import { Link } from 'react-router-dom'
+import { Link, useRevalidator } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { useMutation } from '@tanstack/react-query'
+import { deleteCourse } from '../../../services/courseService'
 
 export default function CardCourse({
-  id = 1,
+  id = '1',
   imageUrl = "/assets/images/thumbnails/th-1.png", 
   name = "Course Galih", 
-  totalStudents = "100", 
+  totalStudents = 100, 
   category = "Algoritma Pemrograman"
 }) {
-  
+  const revalidator = useRevalidator()
+
+  const {isLoading, mutateAsync} = useMutation({
+    mutationFn: () => deleteCourse(id)
+  })
+
+  const handleDelete = async () => {
+    try {
+      await mutateAsync()
+      revalidator.revalidate()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className="card flex items-center gap-5">
       <div className="flex shrink-0 w-[140px] h-[110px] rounded-[20px] bg-[#D9D9D9] overflow-hidden">
@@ -28,6 +44,9 @@ export default function CardCourse({
           </div>
       </div>
       <div className="flex justify-end items-center gap-3">
+          <button onClick={handleDelete} disabled={isLoading} type='button' className="w-fit rounded-full bg-red-500 p-[14px_20px] text-white font-semibold text-nowrap">
+              Delete
+          </button>
           <Link to={`/manager/courses/${id}`} className="w-fit rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
               Manage
           </Link>
@@ -37,9 +56,9 @@ export default function CardCourse({
 }
 
 CardCourse.propTypes = {
-  id: PropTypes.number,
+  id: PropTypes.string,
   imageUrl: PropTypes.string,
   name: PropTypes.string,
-  totalStudents: PropTypes.string,
+  totalStudents: PropTypes.number,
   category: PropTypes.string
 }

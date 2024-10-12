@@ -24,6 +24,9 @@ export const signUpAction = async (req, res) => {
             price: 280000,
         })
 
+        await user.save();
+        await transaction.save();
+
         const midtrans = await fetch(MIDTRANS_URL, {
             method: 'POST',
             headers: {
@@ -33,7 +36,7 @@ export const signUpAction = async (req, res) => {
             },
             body: JSON.stringify({
                 transaction_details: {
-                    order_id: transaction._id.toString(),
+                    order_id: transaction.order_id,
                     gross_amount: transaction.price
                 },
                 credit_card:{
@@ -49,9 +52,6 @@ export const signUpAction = async (req, res) => {
         })
 
         const resMidtrans = await midtrans.json();
-
-        await user.save();
-        await transaction.save();
 
         return res.json({
             message: 'Sign Up Successfully',

@@ -43,6 +43,40 @@ export const getCourses = async (req, res) => {
     }
 }
 
+export const getCategories = async (req, res) => {
+    try {
+        const categories = await categorySchema.find()
+
+        return res.json({
+            message: "Get Categories Success",
+            data: categories
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error'
+        })
+    }
+}
+
+export const getCourseById = async (req, res) => {
+    try {
+        const {id} = req.params
+
+        const course = await courseSchema.findById(id)
+
+        return res.json({
+            message: 'Get Course Details Success',
+            data: course
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error'
+        })
+    }
+}
+
 export const postCourse = async (req, res) => {
     try {
         const body = req.body

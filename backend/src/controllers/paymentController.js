@@ -4,15 +4,16 @@ export const handlePayment = async (req, res) => {
     try {
         const body = req.body;
         const orderId = body.order_id;
-        
-        onsole.log("Received Payment Notification:", body);
+
+        console.log("Received Payment Notification:", body);
         console.log("Order ID:", orderId);
         console.log("Transaction Status:", body.transaction_status);
 
+        // Ubah dari findByIdAndUpdate ke findOneAndUpdate berdasarkan order_id
         switch (body.transaction_status) {
             case "capture":
             case "settlement":
-                await transactionSchema.findByIdAndUpdate(orderId, {
+                await transactionSchema.findOneAndUpdate({ order_id: orderId }, {
                     status: "success",
                 })
                 break;
@@ -21,24 +22,24 @@ export const handlePayment = async (req, res) => {
             case "cancel":
             case "expire":
             case "failure":
-                await transactionSchema.findByIdAndUpdate(orderId, {
+                await transactionSchema.findOneAndUpdate({ order_id: orderId }, {
                     status: "failed",
                 })
                 break;
-        
+
             default:
                 break;
         }
 
-        return res.json({
+        return res.status(200).json({
             message: 'Handle Payment Success',
             data: {}
         });
     } catch (error) {
         console.log(error);
 
-    return res.status(500).json({
-        message: 'Internal Server Error'
-    })
+        return res.status(500).json({
+            message: 'Internal Server Error'
+        });
     }
 }

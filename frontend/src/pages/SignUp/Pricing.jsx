@@ -5,15 +5,15 @@ import { postSignUp } from "../../services/authService";
 import { useMutation } from "@tanstack/react-query";
 
 export default function Pricing({data}) {
-    console.log(data);
-
     const {isLoading, mutateAsync} = useMutation({
         mutationFn: () => postSignUp(data)
     })
 
     const submitData = async () => {
         try {
-            if (!data) return
+            if (!data) {
+                return
+            } 
             const response = await mutateAsync();
             window.location.replace(response.data.midtrans_payment_url);
         } catch (error) {
