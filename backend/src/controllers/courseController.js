@@ -74,9 +74,14 @@ export const getCourseById = async (req, res) => {
             select: preview === "true" ? 'title type youtubeId text' : 'title type'
         })
 
+        const imageUrl = process.env.APP_URL + '/uploads/courses/'
+
         return res.json({
             message: 'Get Course Details Success',
-            data: course
+            data: {
+                ...course.toObject(),
+                thumbnail_url: imageUrl + course.thumbnail
+            }
         });
     } catch (error) {
         console.log(error);
@@ -293,5 +298,23 @@ export const deleteContentCourse = async (req, res) => {
         return res.status(500).json({
             message: 'Internal server error'
         })
+    }
+}
+
+export const getDetailContent = async (req, res) => {
+    try {
+        const {id} = req.params;
+
+        const content = await courseDetailSchema.findById(id);
+
+        return res.json({
+            message: 'Get detail content successfully',
+            data: content
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error'
+        })  
     }
 }

@@ -7,13 +7,13 @@ import LayoutDashboard from "../components/LayoutDashboard";
 import ManagerCoursePage from "../pages/Manager/Courses/ManagerCoursePage";
 import ManagerCreateCoursePage from "../pages/Manager/CreateCourse/ManagerCreateCoursePage";
 import ManagerCourseDetailPage from "../pages/Manager/CourseDetail/ManagerCourseDetailPage";
-import ManagerCreateContentPage from "../pages/Manager/CreateCourseContent/CourseContentCreate";
+import ManagerCreateContentPage from "../pages/Manager/CreateCourseContent/ManagerCreateContentPage";
 import ManagerCoursePreviewPage from "../pages/Manager/CoursePreview/ManagerCoursePreviewPage";
 import ManagerStudentsPage from "../pages/Manager/Students/StudentOverview/ManagerStudentsPage";
 import StudentPage from "../pages/Students/StudentPage";
 import secureLocalStorage from "react-secure-storage";
 import { MANAGER_SESSION, STORAGE_KEY } from "../utils/const";
-import { getCategories, getCourseDetail, getCourses } from "../services/courseService";
+import { getCategories, getCourseDetail, getCourses, getDetailContent } from "../services/courseService";
 
 
 const Router = createBrowserRouter([
@@ -80,6 +80,10 @@ const Router = createBrowserRouter([
       },
       {
         path: "/manager/courses/:id",
+        loader: async ({params}) => {
+          const course = await getCourseDetail(params.id)
+          return course?.data
+        },
         element: <ManagerCourseDetailPage />
       },
       {
@@ -87,7 +91,21 @@ const Router = createBrowserRouter([
         element: <ManagerCreateContentPage />
       },
       {
+        path: "/manager/courses/:id/edit/:contentId",
+        loader: async ({params}) => {
+          const content = await getDetailContent(params.contentId)
+
+          return content?.data
+        },
+        element: <ManagerCreateContentPage />
+      },
+      {
         path: "/manager/courses/:id/preview",
+        loader: async ({params}) => {
+          const course = await getCourseDetail(params.id, true)
+
+          return course?.data
+        },  
         element: <ManagerCoursePreviewPage />
       },
       {

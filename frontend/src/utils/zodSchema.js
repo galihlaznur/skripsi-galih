@@ -19,3 +19,33 @@ export const createCourseSchema = z.object({
 export const updateCourseSchema = createCourseSchema.partial({
     thumbnail: true
 })
+
+export const createContentSchema = z.object({
+    title: z.string().min(5),
+    type: z.string().min(3, {message: 'Type is required'}),
+    youtubeId: z.string().optional(),
+    text: z.string().optional()
+}).superRefine((val, ctx) => {
+    const parseVideoId = z.string().min(4).safeParse(val.youtubeId);
+    const parseText = z.string().min(4).safeParse(val.text);
+    
+    if (val.type === 'video') {
+        if (!parseVideoId.success) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'YouTube Id is required',
+                path: ['youtubeId']
+            })
+        }
+    }
+
+    if (val.type === 'text') {
+        if (!parseText.success) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'Content tText is required',
+                path: ['text']
+            })
+        }
+    }
+})
