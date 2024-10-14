@@ -1,5 +1,7 @@
-import { Link } from 'react-router-dom'
+import { Link, useRevalidator } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { useMutation } from '@tanstack/react-query'
+import { deleteStudent } from '../../../../services/studentService'
 
 export default function StudentItem({
     id = 1,
@@ -7,6 +9,21 @@ export default function StudentItem({
     name = "Galih",
     totalCourse = 10
 }) {
+    const revalidator = useRevalidator()
+
+  const {isLoading, mutateAsync} = useMutation({
+    mutationFn: () => deleteStudent(id)
+  })
+
+  const handleDelete = async () => {
+    try {
+      await mutateAsync()
+      revalidator.revalidate()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className="card flex items-center gap-5">
         <div className="relative flex shrink-0 w-20 h-20">
@@ -27,7 +44,7 @@ export default function StudentItem({
             <Link to={`/manager/students/edit/${id}`} className="w-fit rounded-full border border-[#060A23] p-[14px_20px] font-semibold text-nowrap">
                 Edit Profile
             </Link>
-            <button type="button" className="w-fit rounded-full p-[14px_20px] bg-[#FF435A] font-semibold text-white text-nowrap">Delete</button>
+            <button onClick={handleDelete} type="button" className="w-fit rounded-full p-[14px_20px] bg-[#FF435A] font-semibold text-white text-nowrap" disabled={isLoading}>Delete</button>
         </div>
     </div>
   )

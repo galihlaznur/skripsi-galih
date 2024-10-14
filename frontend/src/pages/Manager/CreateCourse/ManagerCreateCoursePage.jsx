@@ -138,6 +138,10 @@ export default function ManagerCreateCoursePage() {
             <button
               type="button"
               id="delete-preview"
+              onClick={() => {
+                setFile(null);
+                setValue("thumbnail", null);
+              }}
               className={`absolute right-[10px] bottom-[10px] w-12 h-12 rounded-full z-10 ${
                 file !== null ? "block" : "hidden"
               }`}

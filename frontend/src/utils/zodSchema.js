@@ -49,3 +49,19 @@ export const createContentSchema = z.object({
         }
     }
 })
+
+export const createStudentSchema = z.object({
+    name: z.string().min(5),
+    email: z.string().email(),
+    password: z.string().min(5),
+    photo: z.any().refine((file) => file?.name, {message: 'Thumbnail is required'})
+})
+
+export const updateStudentSchema = createStudentSchema.omit({
+    password: true,
+    photo: true
+})
+
+export const addStudentCourseSchema = z.object({
+    studentId: z.string().min(5)
+})
