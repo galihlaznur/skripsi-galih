@@ -6,6 +6,7 @@ import globalRoute from './routes/globalRoute.js';
 import authRoute from './routes/authRoute.js';
 import paymentRoute from './routes/paymentRoute.js';
 import courseRoute from './routes/courseRoute.js';
+import studentRoute from './routes/studentRoute.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api", globalRoute);
 app.use("/api", authRoute);
 app.use("/api", paymentRoute);
 app.use("/api", courseRoute);
+app.use("/api", studentRoute);
 
 app.get('/', (req, res) => {
     res.json({"text": "Hello Galih"});

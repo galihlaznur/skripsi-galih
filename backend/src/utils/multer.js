@@ -1,9 +1,9 @@
 import multer from "multer";
 import path from "path";
 
-export const fileStorageCourse = multer.diskStorage({
+export const fileStorage = (location) =>  multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "public/uploads/courses")
+        cb(null, `public/uploads/${location}`)
     },
     filename: (req, file, cb) => {
         const now = new Date(); // Ambil waktu saat ini
@@ -18,7 +18,7 @@ export const fileStorageCourse = multer.diskStorage({
 
         const ext = path.extname(file.originalname);
         const uniqId = `${formattedDate}-${Math.round(Math.random() * 1e9)}`
-        cb(null, `${file.fieldname}-${uniqId}.${ext}`)
+        cb(null, `${file.fieldname}-${uniqId}${ext}`)
     }
 })
 

@@ -26,3 +26,9 @@ export const mutateContentSchema = z.object({
     text: z.string().optional(),
     courseId: z.string().min(5),
 });
+
+export const mutateStudentSchema = z.object({
+    name: z.string().min(5),
+    email: z.string().email(),
+    password: z.string().min(5)
+});

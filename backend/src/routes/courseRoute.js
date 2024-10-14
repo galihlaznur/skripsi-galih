@@ -2,14 +2,14 @@ import express from "express";
 import { deleteContentCourse, deleteCourse, getCategories, getCourseById, getCourses, getDetailContent, postContentCourse, postCourse, updateContentCourse, updateCourse } from "../controllers/courseController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import multer from "multer";
-import { fileFilter, fileStorageCourse } from "../utils/multer.js";
+import { fileFilter, fileStorage } from "../utils/multer.js";
 import { mutateContentSchema } from "../utils/schema.js";
 import { validateRequest } from '../middleware/validateRequest.js';
 
 const courseRoute = express.Router();
 
 const upload = multer({
-    storage: fileStorageCourse,
+    storage: fileStorage('courses'),
     fileFilter
 })
 
