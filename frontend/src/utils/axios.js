@@ -26,4 +26,13 @@ apiInstanceAuth.interceptors.request.use((config) => {
     return config
 })
 
+apiInstanceAuth.interceptors.response.use((response) => response, (err) => {
+    if (err?.response?.status === 400) {
+        window.location.replace('/manager/sign-in')
+        secureLocalStorage.removeItem(STORAGE_KEY)
+    }
+
+    return Promise.reject('Err')
+})
+
 export default apiInstance;
