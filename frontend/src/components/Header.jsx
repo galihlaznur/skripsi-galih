@@ -1,14 +1,15 @@
 import { Link, useRouteLoaderData } from 'react-router-dom'
-import { MANAGER_SESSION, STORAGE_KEY } from "../utils/const";
+import { MANAGER_SESSION, STORAGE_KEY, STUDENT_SESSION } from "../utils/const";
 import secureLocalStorage from 'react-secure-storage'
+import PropTypes from 'prop-types'
 
-export default function Header() {
-    const session = useRouteLoaderData(MANAGER_SESSION)
+export default function Header({type = 'manager'}) {
+    const session = useRouteLoaderData(type === 'manager' ? MANAGER_SESSION : STUDENT_SESSION)
 
     const handleLogout = () => {
         secureLocalStorage.removeItem(STORAGE_KEY)
 
-        window.location.replace('/manager/sign-in')
+        window.location.replace(`/${type}/sign-in`)
     }
 
   return (
@@ -25,7 +26,7 @@ export default function Header() {
             <button type="button" id="profileButton" className="flex shrink-0 w-[50px] h-[50px] rounded-full overflow-hidden">
                 <img src="/assets/images/photos/photo-1.png" className="w-full h-full object-cover" alt="profile photos" />
             </button>
-            <div id="ProfileDropdown" className="absolute top-full hidden group-hover:block">
+            <div id="ProfileDropdown" className="absolute top-full hidden group-hover:block z-30">
                 <ul className="flex flex-col w-[200px] rounded-[20px] border border-[#CFDBEF] p-5 gap-4 bg-white mt-4">
                     <li className="font-semibold">
                         <Link to="#">My Account</Link>
@@ -44,4 +45,8 @@ export default function Header() {
         </div>
     </div>
   )
+}
+
+Header.propTypes = {
+    type: PropTypes.string
 }

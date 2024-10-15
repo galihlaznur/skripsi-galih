@@ -4,10 +4,6 @@ import userSchema from "../models/userSchema.js";
 export const verifyToken = async (req, res, next) => {
     const secretKey = process.env.SECRET_KEY_JWT ?? "";
 
-    return res.status(400).json({
-        message: "Token Expired"
-    })
-
     if (req?.headers?.authorization?.split(' ')[0] === 'JWT') {
         const decoded = jwt.verify(
             req?.headers?.authorization?.split(' ')[1],
