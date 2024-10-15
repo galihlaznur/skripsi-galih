@@ -318,3 +318,91 @@ export const getDetailContent = async (req, res) => {
         })  
     }
 }
+
+export const getStudentByCourseId = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const course = await courseSchema.findById(id).select('name').populate({
+            path: 'students',
+            select: 'name email photo'
+        })
+
+        const imageUrl = process.env.APP_URL + '/uploads/students/'
+
+        const studentsMap = course?.students?.map((item) => {
+            return {
+                ...item.toObject(),
+                photo_url: imageUrl + item.photo
+            }
+        })
+
+        return res.json({
+            message: 'Get students by course success',
+            data: {
+                ...course.toObject(),
+                students: studentsMap
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error'
+        }) 
+    }
+}
+
+export const postStudentToCourse = async (req, res) => {
+    try {
+        const body = req.body
+        const {id} = req.params
+
+        await userSchema.findByIdAndUpdate(body.studentId, {
+            $push: {
+                courses: id
+            }
+        })
+
+        await courseSchema.findByIdAndUpdate(id, {
+            $push: {
+                students: body.studentId
+            }
+        })
+
+        return res.json({
+            message: 'Add student to course success'
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error'
+        }) 
+    }
+}
+
+export const deleteStudentToCourse = async (req, res) => {
+    try {
+        const body = req.body
+        const {id} = req.params
+
+        await userSchema.findByIdAndUpdate(body.studentId, {
+            $pull: {
+                courses: id
+            }
+        })
+
+        await courseSchema.findByIdAndUpdate(id, {
+            $pull: {
+                students: body.studentId
+            }
+        })
+
+        return res.json({
+            message: 'Delete student to course success'
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Internal server error'
+        }) 
+    }
+}
